@@ -37,6 +37,8 @@ void reduceFraction(pair<int, int>& p)
 	}
 }
 
+
+
 void readFraction(string& s, vector<pair<int, int>>& v)
 {
 	int FIRST, SECOND;
@@ -50,6 +52,12 @@ void readFraction(string& s, vector<pair<int, int>>& v)
 			v.push_back(make_pair(FIRST, SECOND));
 		}
 	}
+}
+
+void formatFraction(pair<int, int>& p)
+{
+	if (p.first>0 && p.second<0) {p.first=-p.first; p.second=-p.second;}
+	else if (p.first<0 && p.second<0) {p.first=-p.first; p.second=-p.second;}
 }
 
 int main()
@@ -71,10 +79,10 @@ int main()
 		count++;
 	}
 
+	// read matrix
 	int size=rows*cols;
 	vector<pair<int, int>> mat;
 	mat.reserve(size);
-	// read matrix
 	while (getline(inputfile, line))
 	{
 		istringstream ss(line);
@@ -85,9 +93,11 @@ int main()
 		}
 	}
 
+	// check and reduce fractions of matrix
 	for (int i=0; i<size; i++)
 	{
 		reduceFraction(mat[i]);
+		formatFraction(mat[i]);
 	}
 
 	//write result to outputfile
