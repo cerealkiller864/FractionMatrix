@@ -26,15 +26,17 @@ int gcd(int& a, int& b)
 	return GCD;
 }
 
-void reduceFraction(pair<int, int>& p)
+int reduceFraction(pair<int, int>& p) //return 1 if reduced, return 0 otherwise
 {	
 	int GCD = gcd(p.first, p.second);
-	if (GCD==0 || GCD==1) {return;}
+	if (GCD==0 || GCD==1) {return 0;}
 	else
 	{
 		p.first = (p.first / GCD);
 		p.second = (p.second / GCD);
 	}
+
+	return 1;
 }
 
 
@@ -96,7 +98,12 @@ int main()
 	// check and reduce fractions of matrix
 	for (int i=0; i<size; i++)
 	{
-		reduceFraction(mat[i]);
+		if (reduceFraction(mat[i]) == 0) //if irreducable, delete fraction from matrix
+		{
+			mat.erase(mat.begin()+i);
+			size--;
+			i--;
+		};
 		formatFraction(mat[i]);
 	}
 
