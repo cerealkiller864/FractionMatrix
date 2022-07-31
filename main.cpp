@@ -10,15 +10,15 @@ int gcd(int& a, int& b)
 {
     if (a==0 || b==0) return 0;
 
-	int GCD, n1=abs(a), n2=abs(b);
-	if (n1>n2) //n2 must be greater than n1
+	int GCD, n1 = abs(a), n2 = abs(b);
+	if (n1>n2) // Always n2 > n1
 	{
 		int tmp = n1;
 		n1 = n2;
 		n2 = tmp;
 	}
 
-	for (int i = 1; i <= n1; i++)
+	for (int i=1; i<=n1; i++)
 	{
 		if (n1%i==0 && n2%i==0) {GCD=i;}
 	}
@@ -26,14 +26,14 @@ int gcd(int& a, int& b)
 	return GCD;
 }
 
-int reduceFraction(pair<int, int>& p) //return 1 if reduced, return 0 otherwise
+int reduceFraction(pair<int, int>& p) // Return 1 if reduced, return 0 otherwise
 {	
 	int GCD = gcd(p.first, p.second);
 	if (GCD==0 || GCD==1) {return 0;}
 	else
 	{
-		p.first = (p.first / GCD);
-		p.second = (p.second / GCD);
+		p.first = p.first/GCD;
+		p.second = p.second/GCD;
 	}
 
 	return 1;
@@ -48,8 +48,8 @@ void readFraction(string& s, vector<pair<int, int>>& v)
 	{
 		if (s[i]=='/')
 		{
-			FIRST = stoi(s.substr(0, i));
-			SECOND = stoi(s.substr(i+1, s.length()-i));
+			FIRST=stoi(s.substr(0, i));
+			SECOND=stoi(s.substr(i+1, s.length()-i));
 			if (SECOND==0) {cout << "DIVIDE BY 0!"; exit(0);}
 			v.push_back(make_pair(FIRST, SECOND));
 		}
@@ -58,8 +58,16 @@ void readFraction(string& s, vector<pair<int, int>>& v)
 
 void formatFraction(pair<int, int>& p)
 {
-	if (p.first>0 && p.second<0) {p.first=-p.first; p.second=-p.second;}
-	else if (p.first<0 && p.second<0) {p.first=-p.first; p.second=-p.second;}
+	if (p.first>0 && p.second<0) 
+	{
+		p.first=-p.first;
+		p.second=-p.second;
+	}
+	else if (p.first<0 && p.second<0) 
+	{
+		p.first=-p.first; 
+		p.second=-p.second;
+	}
 }
 
 int main()
@@ -71,20 +79,21 @@ int main()
 		cout << "Accessed file successfully" << endl;
 	}
 
-	//read number of rows and cols of matrix
-	int rows, cols, count=1;
-	string line;
-	while (count <=2 && getline(inputfile, line))
-	{
-		istringstream ss(line);
-		ss >> ((count==1) ? rows : cols);
-		count++;
-	}
-
-	// read matrix
-	int size=rows*cols;
+	int rows, cols, size;
 	vector<pair<int, int>> mat;
+	string line;
+
+	// Read number of rows and cols of matrix
+	for (int i=1; i<=2; i++)
+	{
+		getline(inputfile, line);
+		istringstream ss(line);
+		ss >> ((i==1) ? rows : cols);
+	}
+	size = rows*cols;
 	mat.reserve(size);
+
+	// Read matrix
 	while (getline(inputfile, line))
 	{
 		istringstream ss(line);
@@ -95,10 +104,10 @@ int main()
 		}
 	}
 
-	// check and reduce fractions of matrix
+	// Check and reduce fractions
 	for (int i=0; i<size; i++)
 	{
-		if (reduceFraction(mat[i]) == 0) //if irreducable, delete fraction from matrix
+		if (!reduceFraction(mat[i])) // If irreducable, delete fraction from matrix
 		{
 			mat.erase(mat.begin()+i);
 			size--;
@@ -107,7 +116,7 @@ int main()
 		formatFraction(mat[i]);
 	}
 
-	//write result to outputfile
+	// Write result to outputfile
 	for (int i=0; i<size; i++)
 	{
 		outputfile << mat[i].first << '/' << mat[i].second << ' ';
